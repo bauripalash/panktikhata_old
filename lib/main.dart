@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:panktikhata/frontpage.dart';
-import 'package:panktikhata/panktiapi.dart';
 void main() {
-	final f = CodeFFI();
-	print(f.sum(1, 2));
   runApp(const MyApp());
 }
 
