@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:panktikhata/settings.dart';
+import 'package:panktikhata/codetheme.dart';
 
 class PanktiSettingsPage extends StatefulWidget {
-  const PanktiSettingsPage({super.key, required this.settingsChanged});
+  const PanktiSettingsPage(
+      {super.key, required this.settingsChanged, required this.settings});
+  final UserSettings settings;
   final ValueChanged<UserSettings> settingsChanged;
 
   @override
@@ -10,7 +13,7 @@ class PanktiSettingsPage extends StatefulWidget {
 }
 
 class _PanktiSettingsPage extends State<PanktiSettingsPage> {
-  UserSettings settings = UserSettings();
+  late final settings = widget.settings;
 
   void settingsChanged() {
     print("called from SettingsView");
@@ -49,6 +52,27 @@ class _PanktiSettingsPage extends State<PanktiSettingsPage> {
                         });
                       }),
                 ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const Text("Editor Theme"),
+                DropdownMenu<CodeTheme>(
+                  initialSelection: settings.theme ?? CodeTheme.a11Light,
+                  dropdownMenuEntries: CodeTheme.values
+                      .map<DropdownMenuEntry<CodeTheme>>((CodeTheme th) {
+                    return DropdownMenuEntry<CodeTheme>(
+                      value: th,
+                      label: th.label,
+                    );
+                  }).toList(),
+                  onSelected: (CodeTheme? value) {
+                    setState(() {
+                      settings.theme = value;
+                    });
+                  },
+                ),
+              ],
+            ),
             ButtonBar(
               alignment: MainAxisAlignment.end,
               children: <Widget>[

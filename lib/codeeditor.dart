@@ -17,7 +17,6 @@ class PanktiCodeEdit extends StatefulWidget {
 }
 
 class _PanktiCodeEdit extends State<PanktiCodeEdit> {
-	
   late final CodeLineEditingController controller = widget.codeEditorController;
   late final CodeEditorStyle style = widget.codeEditorStyle;
 

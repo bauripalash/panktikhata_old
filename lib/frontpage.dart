@@ -8,6 +8,9 @@ import 'package:re_editor/re_editor.dart';
 import 'package:panktikhata/syntax/pankti.dart';
 import 'package:re_highlight/styles/all.dart';
 import 'package:re_highlight/styles/tomorrow-night-blue.dart';
+import 'package:panktikhata/codetheme.dart';
+
+import 'package:panktikhata/panktiapi.dart';
 
 class PanktiFrontPage extends StatefulWidget {
   const PanktiFrontPage({super.key});
@@ -18,6 +21,8 @@ class PanktiFrontPage extends StatefulWidget {
 
 class _PanktiFrontPage extends State<PanktiFrontPage> {
   int _index = 0;
+  final ff = CodeFFI();
+  
 
   var _key = UniqueKey();
   var usettings = UserSettings();
@@ -33,19 +38,20 @@ class _PanktiFrontPage extends State<PanktiFrontPage> {
 
   @override
   initState() {
+	  print(ff.sum(1,2));
     print("init state called");
     usettings.fontSize = 20;
-    usettings.theme = "xt256";
+    usettings.theme = CodeTheme.a11Light;
     codeEditorStyle = CodeEditorStyle(
       fontSize: usettings.fontSize!,
       fontFamily: 'Noto Serif Bengali',
-      backgroundColor: root.backgroundColor,
-      textColor: root.color,
+      backgroundColor: usettings.theme!.style.values.first.backgroundColor,
+      textColor: usettings.theme!.style.values.first.color,
       codeTheme: CodeHighlightTheme(
         languages: {
           'pankti': CodeHighlightThemeMode(mode: langPankti),
         },
-        theme: builtinAllThemes["xt256"] ?? defaultTheme,
+        theme: usettings.theme!.style,
       ),
     );
     super.initState();
@@ -57,18 +63,19 @@ class _PanktiFrontPage extends State<PanktiFrontPage> {
       codeEditorStyle = CodeEditorStyle(
         fontSize: s.fontSize,
         fontFamily: 'Noto Serif Bengali',
-        backgroundColor: root.backgroundColor,
-        textColor: root.color,
+        backgroundColor: usettings.theme!.style.values.first.backgroundColor,
+        textColor: usettings.theme!.style.values.first.color,
         codeTheme: CodeHighlightTheme(
           languages: {
             'pankti': CodeHighlightThemeMode(mode: langPankti),
           },
-          theme: builtinAllThemes["xt256"] ?? defaultTheme,
+          theme: usettings.theme!.style,
         ),
       );
 
       print("set state");
-	  _key = UniqueKey();
+	
+      _key = UniqueKey();
     });
   }
 
@@ -85,6 +92,7 @@ class _PanktiFrontPage extends State<PanktiFrontPage> {
         context: context,
         builder: (BuildContext context) {
           return PanktiSettingsPage(
+            settings: usettings,
             settingsChanged: (UserSettings settings) {
               settingsChanged(settings);
             },
@@ -113,7 +121,7 @@ class _PanktiFrontPage extends State<PanktiFrontPage> {
               child: Container(
                 key: _key,
                 child: PanktiEditView(
-				key: _key,
+                  key: _key,
                   codeEditorController: codeEditorController,
                   codeEditorStyle: codeEditorStyle,
                   outputController: outputController,

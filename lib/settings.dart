@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:panktikhata/codetheme.dart';
+
 class UserSettings {
-  String? theme;
+  CodeTheme? theme;
   double? fontSize;
 
   UserSettings();
