@@ -1,24 +1,22 @@
 import 'dart:ffi';
-import 'dart:io' show Platform,Directory;
-import 'package:path/path.dart' as path;
+import 'package:ffi/ffi.dart';
 
 typedef SumFunc = Int32 Function(Int32 a, Int32 b);
 typedef Sum = int Function(int a, int b);
+
+typedef AllSampleFunc = Pointer<Utf8> Function(Pointer<Utf8> rawString, Int32 len);
+typedef AllSample = Pointer<Utf8> Function(Pointer<Utf8> str, int len);
 
 class CodeFFI{
 	late final DynamicLibrary dlib;
 
 	CodeFFI() {
 		const libName = "sample";
-		var libPath = path.join(Directory.current.path, "platform/linux64/lib$libName.so");
-		print("PATH ->");
-		print(libPath);
 
-		if (Platform.environment.containsKey("FLUTTER_TEST")) {
-			dlib = DynamicLibrary.open(libPath);
-		} else {
-			dlib = Platform.isIOS ? DynamicLibrary.process() : DynamicLibrary.open(libPath);
-		}
+
+		dlib = DynamicLibrary.open("lib$libName.so");
+		print("DLIB->");
+		print(dlib);
 	}
 
 
@@ -27,5 +25,17 @@ class CodeFFI{
 		final sum = sumPtr.asFunction<Sum>();
 		final result = sum(a,b);
 		return result;
+	}
+
+	String allsample(String str , int len) {
+		final allsPtr = dlib.lookup<NativeFunction<AllSampleFunc>>("allSample");
+		final alls = allsPtr.asFunction<AllSample>();
+		final str = 'Hello'.toNativeUtf8();
+		print(str);
+		final r = alls(str, 5);
+
+
+		calloc.free(str);
+		return r.toDartString();
 	}
 }

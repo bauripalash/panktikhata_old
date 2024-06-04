@@ -39,6 +39,8 @@ class _PanktiFrontPage extends State<PanktiFrontPage> {
   @override
   initState() {
 	  print(ff.sum(1,2));
+	  print(ff.dlib);
+	  print(ff.allsample("Hello", 5));
     print("init state called");
     usettings.fontSize = 20;
     usettings.theme = CodeTheme.a11Light;
